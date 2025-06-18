@@ -1,0 +1,120 @@
+
+services:
+  # 6 Redis nodes for cluster (3 master + 3 replica)
+  redis-node-1:
+    image: redis:7.2
+    container_name: redis-node-1
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - ./cluster/redis-node-1:/usr/local/etc/redis
+    ports:
+      - "7001:6379"
+
+  redis-node-2:
+    image: redis:7.2
+    container_name: redis-node-2
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - ./cluster/redis-node-2:/usr/local/etc/redis
+    ports:
+      - "7002:6379"
+
+  redis-node-3:
+    image: redis:7.2
+    container_name: redis-node-3
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - ./cluster/redis-node-3:/usr/local/etc/redis
+    ports:
+      - "7003:6379"
+
+  redis-node-4:
+    image: redis:7.2
+    container_name: redis-node-4
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - ./cluster/redis-node-4:/usr/local/etc/redis
+    ports:
+      - "7004:6379"
+
+  redis-node-5:
+    image: redis:7.2
+    container_name: redis-node-5
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - ./cluster/redis-node-5:/usr/local/etc/redis
+    ports:
+      - "7005:6379"
+
+  redis-node-6:
+    image: redis:7.2
+    container_name: redis-node-6
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - ./cluster/redis-node-6:/usr/local/etc/redis
+    ports:
+      - "7006:6379"
+
+  redis-cluster-create:
+    image: redis:7.2
+    depends_on:
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+      - redis-node-5
+      - redis-node-6
+    entrypoint: >
+      bash -c "sleep 10 &&
+               echo yes | redis-cli --cluster create
+               redis-node-1:6379
+               redis-node-2:6379
+               redis-node-3:6379
+               redis-node-4:6379
+               redis-node-5:6379
+               redis-node-6:6379
+               --cluster-replicas 1"
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis-node-1
+
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.61.0
+    container_name: redis_exporter
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis://redis-node-1:6379
+    depends_on:
+      - redis-node-1
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - redis-exporter
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  grafana-storage:

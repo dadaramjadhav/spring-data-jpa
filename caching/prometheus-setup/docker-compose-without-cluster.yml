@@ -1,0 +1,116 @@
+# services:
+#   prometheus:
+#     image: prom/prometheus
+#     ports:
+#       - "9090:9090"
+#     volumes:
+#       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+#   grafana:
+#     image: grafana/grafana
+#     ports:
+#       - "3000:3000"
+# environment:
+#   - GF_SECURITY_ADMIN_USER=admin
+#   - GF_SECURITY_ADMIN_PASSWORD=admin123
+
+# without redisinsight
+# services:
+#   redis:
+#     image: redis:7.2
+#     container_name: redis
+#     ports:
+#       - "6379:6379"
+
+#   redis-exporter:
+#     image: oliver006/redis_exporter:v1.61.0
+#     container_name: redis_exporter
+#     ports:
+#       - "9121:9121"
+#     environment:
+#       - REDIS_ADDR=redis://redis:6379
+#     depends_on:
+#       - redis
+
+#   prometheus:
+#     image: prom/prometheus:latest
+#     container_name: prometheus
+#     ports:
+#       - "9090:9090"
+#     volumes:
+#       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+#     depends_on:
+#       - redis-exporter
+
+#   grafana:
+#     image: grafana/grafana:latest
+#     container_name: grafana
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - GF_SECURITY_ADMIN_USER=admin
+#       - GF_SECURITY_ADMIN_PASSWORD=admin123
+#     volumes:
+#       - grafana-storage:/var/lib/grafana
+#     depends_on:
+#       - prometheus
+
+# volumes:
+#   grafana-storage:
+
+# with redis insight
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7.2
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.61.0
+    container_name: redis_exporter
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+    depends_on:
+      - redis
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - redis-exporter
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+  redisinsight:
+    image: redis/redisinsight:2.44.0
+    container_name: redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    volumes:
+      - redisinsight-data:/db
+
+volumes:
+  grafana-storage:
+  redisinsight-data:
