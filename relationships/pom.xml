@@ -17,6 +17,7 @@
 		<module>one-to-one</module>
 		<module>one-to-one-birectional</module>
 		<module>one-to-one-mapsid</module>
+		<module>one-to-many</module>
 	</modules>
 	<name>relationships</name>
 	<description>Demo project for Spring Boot</description>
