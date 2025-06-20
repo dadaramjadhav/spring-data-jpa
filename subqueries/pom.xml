@@ -6,25 +6,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.1</version>
+		<version>3.5.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>relationships</artifactId>
+	<artifactId>subqueries</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<modules>
-		<module>one-to-one</module>
-		<module>one-to-one-birectional</module>
-		<module>one-to-one-mapsid</module>
-		<module>one-to-many</module>
-		<module>one-to-many-bidirectional</module>
-		<module>many-to-one</module>
-		<module>many-to-one-bidirectional</module>
-		<module>many-to-many</module>
-		<module>many-to-many-bidirectional</module>
-	</modules>
-	<name>relationships</name>
+	<name>subqueries</name>
 	<description>Demo project for Spring Boot</description>
 	<url />
 	<licenses>
@@ -73,6 +61,13 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.0.2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

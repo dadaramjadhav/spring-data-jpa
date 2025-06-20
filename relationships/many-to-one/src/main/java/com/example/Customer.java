@@ -29,12 +29,5 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id") // Foreign key will be created in the Order table
-    private List<Orders> orders;
-
-    public Customer(String name, List<Orders> orders) {
-        this.name = name;
-        this.orders = orders;
-    }
+    
 }

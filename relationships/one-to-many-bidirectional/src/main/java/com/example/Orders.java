@@ -1,17 +1,12 @@
 package com.example;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,19 +17,27 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+
 @Entity
-public class Customer {
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id") // Foreign key will be created in the Order table
-    private List<Orders> orders;
+    private String product;
+    private int quantity;
 
-    public Customer(String name, List<Orders> orders) {
-        this.name = name;
-        this.orders = orders;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    public Orders(String product, int quantity) {
+        this.product = product;
+        this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "Orders [id=" + id + ", product=" + product + ", quantity=" + quantity + "]";
+    }
+
 }
