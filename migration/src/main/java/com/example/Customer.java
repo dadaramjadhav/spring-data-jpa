@@ -19,10 +19,15 @@ import lombok.ToString;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
+    private String phone;
+    private String address;
 
-    public Customer(String name) {
+    public Customer(String name, String phone, String address) {
         this.name = name;
+        this.phone = phone;
+        this.address = address;
     }
+
 }
