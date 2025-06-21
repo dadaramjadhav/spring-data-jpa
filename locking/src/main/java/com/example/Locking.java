@@ -27,7 +27,25 @@ public class Locking implements CommandLineRunner {
 		customerRepository.save(new Customer("dm102"));
 		customerRepository.save(new Customer("dm103"));
 
-		customerRepository.findAll().forEach(System.out::println);
-		cs.update();
+		// pessimistic write
+		// customerRepository.findAll().forEach(System.out::println);
+		// cs.update();
+
+		// pessimistic write
+		Thread t1 = new Thread(() -> cs.getCustomerById(2L));
+		Thread t2 = new Thread(() -> {
+			try {
+				Thread.sleep(2000);
+
+			} catch (InterruptedException ie) {
+			}
+			cs.updateCustomer(2L);
+		});
+
+		t1.start();
+		t2.start();
+
+		t1.join();
+		t2.join();
 	}
 }
