@@ -26,7 +26,7 @@ public class Orders {
     private String product;
     private int quantity;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

@@ -19,7 +19,6 @@ public class OneToManyBidirectional implements CommandLineRunner {
 	@Autowired
 	private OrdersRepository ordersRepository;
 
-
 	@Override
 	public void run(String... args) throws Exception {
 		Orders o1 = new Orders("laptop", 4);
@@ -31,9 +30,20 @@ public class OneToManyBidirectional implements CommandLineRunner {
 		customer.setOrders(orders);
 		customerRepository.save(customer);
 
-		customerRepository.findAll().forEach(System.out::println);
+		Customer c1 = new Customer("dm1");
+		c1.setOrders(List.of());
+		customerRepository.save(c1);
+
+		// customerRepository.findAll().forEach(System.out::println);
+
+		// System.out.println("-------------------------------------------");
+		// ordersRepository.findAll().forEach(System.out::println);
 
 		System.out.println("-------------------------------------------");
-		ordersRepository.findAll().forEach(System.out::println);
+		// ordersRepository.findOrdersByCustomerName("John").forEach(System.out::println);
+		// ordersRepository.customersWithNoOrders().forEach(System.out::println);
+		// System.out.println(ordersRepository.fetchCustomerWithOrders(1L));
+
+		ordersRepository.getCustomerWithQuantityGreater(1).forEach(System.out::println);
 	}
 }
